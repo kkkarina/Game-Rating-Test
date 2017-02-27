@@ -1,0 +1,100 @@
+#wrapper {
+    margin: 0 auto;
+    width: 1100px;
+}
+
+#questBlock {
+    width: 700px;
+    height: auto;
+    border: 5px solid #003366;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    float: left;
+    margin-right: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgba(204, 204, 204, 0.8);
+}
+
+#name {
+    padding-top: 10px;
+}
+
+#name img {
+    display: inline-block;
+    float: left;
+    text-align: center;
+}
+
+#name div {
+    display: inline-block;
+    font-size: 50px;
+    text-align: center;
+    width: 480px;
+    color: #003366;
+}
+
+#curQuest {
+    clear: both;
+    width: auto;
+    height: auto;
+    text-align: center;
+    font-size: 30px;
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#answ {
+    text-align: center;
+}
+
+#answ input {
+    font-size: 50px;
+    font-family: fantasy;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+
+#rightBlock {  
+    float: left;    
+}
+
+#resBlock {    
+    background: url(../img/rer.png) no-repeat;
+    width: 307px;
+    height: 463px;
+}
+
+#result {
+    padding-top: 125px;
+    width: auto;
+    height: auto;
+    text-align: center;
+    font-size: 100px;
+    font-family: fantasy;
+}
+
+#yellow {
+    background-color: rgba(255, 255, 0, 0.5);
+}
+
+#red {
+    background-color: rgba(204, 0, 51, 0.5);
+}
+
+#blue {
+    background-color: rgba(0, 153, 204, 0.5);
+}
+
+#pink {
+    background-color: rgba(204, 0, 204, 0.5);
+}
+
+#darkGreen {
+    background-color: rgba(204, 204, 51, 0.5);
+}

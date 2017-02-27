@@ -1,0 +1,73 @@
+#wrapper {
+    margin: 0 auto;
+    width: 780px;
+}
+
+#questBlock {
+    width: 500px;
+    height: auto;
+    border: 3px solid black;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    float: left;
+    margin-right: 20px;
+    padding-bottom: 20px;
+    background-color: rgba(102, 204, 255, 0.3);
+}
+
+#curQuest {
+    width: auto;
+    height: auto;
+    text-align: center;
+    font-size: 30px;
+    margin: 10px;
+}
+
+#answ {
+    text-align: center;
+}
+
+#answ input {
+    font-size: 50px;
+    font-family: fantasy;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+#resBlock {
+    width: 200px;
+    height: 120px;
+    border: 5px solid black;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    float: left;
+    background-color: rgba(204, 204, 204, 0.8);
+}
+
+#result {
+    width: auto;
+    height: auto;
+    text-align: center;
+    font-size: 100px;
+    font-family: fantasy;
+}
+
+#yellow {
+    background-color: rgba(255, 255, 0, 0.5);
+}
+
+#red {
+    background-color: rgba(204, 0, 51, 0.5);;
+}
+
+#blue {
+    background-color: rgba(0, 153, 204, 0.5);;
+}
+
+#pink {
+    background-color: rgba(204, 0, 204, 0.5);;
+}
+
+#darkGreen {
+    background-color: rgba(204, 204, 51, 0.5);
+}
