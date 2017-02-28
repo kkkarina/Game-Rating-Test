@@ -17,6 +17,15 @@
     background-color: rgba(204, 204, 204, 0.8);
 }
 
+#testBegin {
+	font-size: 50px;
+    font-family: fantasy;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: white;
+	border: 0px;
+}
+
 #name {
     padding-top: 10px;
 }
