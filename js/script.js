@@ -1,9 +1,21 @@
-"use strict";
+/*
+* @autor kkkarina, 2017 (https://github.com/kkkarina/)
+* @title Game-Rating-Test
+*/
 
+"use strict";
+/*
+* @object QuestionBank - объект, представляющий собой банк вопросов и ответов для разрабатываемой программы. 
+*/
 var QuestionBank = (function () {
     
+    /* * @private {Array} Массив вопросов 
+    */
     var questions = ['Содержит ли игра сцены или информацию порнографического характера (а также сцены сексуального насилия)?', 'Содержит ли игра бранные выражения?', 'Содержит ли игра информацию о наркотических (психотропных) веществах?', 'Содержится ли в игре пропаганда алкоголя /табачных изделий/азартных игр/проституции/бродяжничества/попрошайничества?', 'Содержит ли игра информацию о противоправном поведении или преступлениях?', 'Содержит ли игра информацию, отрицающую семейные ценности (формирующую неуважение к родителям и (или) другим членам семьи)?', 'Содержит ли игра демонстрацию культуры общества ЛГБТ?', 'Содержит ли игра информацию, побуждающую детей к совершению действий, представляющих угрозу жизни или здоровью ребенка (причинение вреда своему здоровью, самоубийство)?', 'Содержит ли игра сцены жестокости или насилия (НЕ сексуального)?', 'Содержит ли игра сцены несчастного случая, аварии, катастрофы, заболевания, смерти?'];
     
+    /*
+    * @private {Array} Массив ответов для каждого вопроса с указанием рейтинга для каждого ответа
+    */
     var answers = {
       0 : [['Нет', '0+'], ['Да, игра содержит эпизодические ненатуралистические изображение или описание половых отношений между мужчиной и женщиной, за исключением изображения или описания действий сексуального характера','12+'], ['Да, игра содержит информацию о сексе и (или) натуралистические сцены половых отношений, но без подробного изображения и описания действий сексуального характера','16+'], ['Да, игра содержит сцены или информацию порнографического характера (с подробным описанием) или сцены сексуального насилия','18+']],
       1 : [['Нет', '0+'], ['Да, но не относящиеся к нецензурным','16+'], ['Да, игра содержит нецензурную брань','18+']],
@@ -18,18 +30,37 @@ var QuestionBank = (function () {
     };
     
     return {
+        /** @public Возвращает все ответы на все вопросы с их рейтингами
+        * @return {Array} answers - массив ответов и рейтингов
+        */
 		getAnswersAndRatings: function () {
             return answers;
         },
         
+        /** @public Возвращает конкретный вопрос
+        * @param {number} i - номер вопроса
+        * @return {Array}||{string} Вопрос или пустая строка
+        */
         getQuestion: function (i = 0) {
-            return questions[i];
+            if (i < questions.length) {
+                return questions[i];
+            } else {
+                return '';
+            }            
         },
 		
+        /** @public Возвращает ответы с рейтингами на конкретный вопрос
+        * @param {number} i - номер вопроса
+        * @return {object} answers[i] - массив ответов и рейтингов на конкретный вопрос
+        */
 		getAnswerAndRating: function (i = 0) {
             return answers[i];
         },
         
+        /** @public Возвращает ТОЛЬКО ответы на конкретный вопрос
+        * @param {number} a - номер вопроса
+        * @return {Array} curansw - массив ответов на конкретный вопрос
+        */
         getOnlyAnswersForQ: function (a = 0) {
             var curansw = [];
             var allansw = answers[a];
@@ -39,14 +70,25 @@ var QuestionBank = (function () {
             return curansw;
         },
 		
+        /** @public Возвращает ТОЛЬКО рейтинг определенного ответа на конкретный вопрос
+        * @param {number} q - номер вопроса
+        * @param {number} i - номер ответа
+        * @return {string} answers[q][i][1] - рейтинг ответа
+        */
 		getRatingOfAnswer: function (q = 0, i = 0) {
             return answers[q][i][1];
         },
 		
+        /** @public Возвращает количество вопросов
+        * @return {number} количество вопросов
+        */
 		getQuestionsLength: function () {
 			return questions.length;
 		},
 		
+        /** @public Возвращает количество ответов
+        * @return {number} count - количество ответов
+        */
 		getAnswersLength: function () {
             var count = 0;
             for (var smt in answers) {
@@ -57,14 +99,32 @@ var QuestionBank = (function () {
 	}
 })();
 
+/*
+* @object testing - объект, представляющий собой контроллер за процессом тестирования. 
+*/
 var testing = (function () {
     
+    /*
+    * @private {number} Количество пройденных вопросов
+    */
     var qnum = 0;
+     /*
+    * @private {number} Номер текущего вопрос
+    */
     var current = 0;
+     /*
+    * @private {string} Максимальный рейтинг игры на данный момент
+    */
 	var maxRating = '0+';
+     /*
+    * @private {boolean} Показатель, запущен или нет процесс тестирования
+    */
 	var ongoing = false;
     
-    return {		
+    return {	
+        /** @public Возвращает следующий вопрос для теста
+        * @return {string} следующий вопрос для теста или пустая строка
+        */
 		getNextQuestion: function () {
 			if (qnum < QuestionBank.getQuestionsLength()) {
                 current = qnum;
@@ -74,6 +134,9 @@ var testing = (function () {
 			}            
         },
         
+        /** @public Возвращает все ответы и их рейтинг для текущего вопроса в тесте
+        * @return {object} Список ответов и их рейтинга для текущего вопроса в тесте или пустой список
+        */
         getNQAnswers: function () {
             if (current < QuestionBank.getAnswersLength()) {                
 				return (QuestionBank.getAnswerAndRating(current));
@@ -82,6 +145,9 @@ var testing = (function () {
 			} 
         },
 		
+        /** @public Устанавливает в тесте следующий вопрос и ответы к нему
+        * @see testingFrame
+        */
 		nextQuestion: function () {
 			if (ongoing) {
 				var nextQ = this.getNextQuestion();
@@ -94,6 +160,9 @@ var testing = (function () {
 			}            
         },
 		
+        /** @public Оценивает текущий ответ пользователя на заданный вопрос и принимает решение, продолжать ли тестирование
+        * @param {string} currating - рейтинг ответа пользователя
+        */
 		checkAnsw: function (currating) {
 			if (ongoing) {
 				maxRating = this.getMaxRating(maxRating, currating);
@@ -106,6 +175,11 @@ var testing = (function () {
 			}
 		},
 		
+        /** @public Сравнивает два рейтинга игр
+        * @param {string} f - первый переданный рейтинг
+        * @param {string} s - второй переданный рейтинг
+        * @return {object} найбильный рейтинг
+        */
 		getMaxRating: function (f, s) {
 			if (parseInt(f.substring(0, f.length-1)) >= parseInt(s.substring(0, s.length-1))) {
 				return f;
@@ -114,13 +188,17 @@ var testing = (function () {
 			}
 		},
 		
+        /** @public Завершает процесс тестирования
+        */
 		endTesting: function () {
 			testingFrame.setTheEnd();
 			qnum = QuestionBank.getQuestionsLength();
 			ongoing = false;
 		},
 		
-		beginTesting: function () {
+		/** @public Начинает процесс тестирования
+        */
+        beginTesting: function () {
 			ongoing = true;
 			qnum = 0;
             current = 0;
@@ -129,8 +207,15 @@ var testing = (function () {
     }
 })();
 
+/*
+* @object testingFrame - объект, отвечающий за связь процесса тестирования (объекта testing) и интерфейса.
+*/
 var testingFrame = (function () {
     
+    /** @private Получает количество элементов в коллекции
+    * @param {object} obj - коллекция
+    * @return {number} count - количество элементов в коллекции
+    */
     function getObjectLength (obj) {
         var count = 0;
             for (var smt in obj) {
@@ -140,10 +225,16 @@ var testingFrame = (function () {
     }
     
     return {
+        /** @public Вставляет вопрос в окно вопросов
+        * @param {string} qtext - вопрос
+        */
         setQuestionInFrame: function (qtext) {
 			document.getElementById('curQuestText').innerHTML = qtext;         
         },
 		
+        /** @public Оповещает пользователя о завершении тестирования
+        * @this {testingFrame} 
+        */
 		setTheEnd: function () {
 			var curText = document.getElementById('curQuestText').innerHTML; 
             document.getElementById('answ').innerHTML = '';
@@ -153,26 +244,29 @@ var testingFrame = (function () {
             this.addBeginButton();
         },
         
+        /** @public Показывает кнопку "Начать тестирование заново"
+        */
         addBeginButton: function () {
-            /*var newInp = document.createElement('input');
-            newInp.type = "button";
-            newInp.name = 'testBegin';
-            newInp.id = 'testBegin';
-            newInp.value = 'Начать заново';
-            document.getElementById('curQuest').appendChild(newInp);*/
             document.getElementById('testBegin').value = 'Начать тестирование заново';
             document.getElementById('testBegin').style.display = 'block';
         },
 		
+        /** @public Устанавливает рейтинг в окно рейтинга
+        */
 		setRaiting: function (rating) {
 			document.getElementById('result').innerHTML = rating;   
 		},
 		
+        /** @public Изменяет интерфейс в связи с началом тестирования
+        * @see testing
+        */
 		setBegin: function () {
 			document.getElementById('testBegin').style.display = 'none';
 			testing.nextQuestion();
 		},
         
+        /** @public Вставляет ответы на вопрос в окно ответов 
+        */
         setAnswersInFrame: function (answ) {
             document.getElementById('answ').innerHTML = ''; 
             var answlen = getObjectLength(answ);
@@ -193,10 +287,15 @@ var testingFrame = (function () {
     }
 })();
 
+/*
+* @object MyListener - объект-слушатель действий пользователя и состояния системы.
+*/
 var MyListener = (function () {
 			
   return {
-	  
+      
+	  /** @public Слушатель действий пользователя и состояния системы
+      */
 	  beginListening: function() {
       
           $(document).mousedown(function(event) {
@@ -215,7 +314,8 @@ var MyListener = (function () {
   }
 })();
 
+/** Глобальная функция-"слушатель", которая запускается при полной загрузке веб-страницы.
+*/
 $(document).ready(function() {
 	MyListener.beginListening();	
-    //console.log(QuestionBank.getOnlyAnswersForQ(0));
 })
