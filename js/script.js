@@ -13,8 +13,7 @@ var QuestionBank = (function () {
     */
     var questions = ['Содержит ли игра сцены или информацию порнографического характера (а также сцены сексуального насилия)?', 'Содержит ли игра бранные выражения?', 'Содержит ли игра информацию о наркотических (психотропных) веществах?', 'Содержится ли в игре пропаганда алкоголя /табачных изделий/азартных игр/проституции/бродяжничества/попрошайничества?', 'Содержит ли игра информацию о противоправном поведении или преступлениях?', 'Содержит ли игра информацию, отрицающую семейные ценности (формирующую неуважение к родителям и (или) другим членам семьи)?', 'Содержит ли игра демонстрацию культуры общества ЛГБТ?', 'Содержит ли игра информацию, побуждающую детей к совершению действий, представляющих угрозу жизни или здоровью ребенка (причинение вреда своему здоровью, самоубийство)?', 'Содержит ли игра сцены жестокости или насилия (НЕ сексуального)?', 'Содержит ли игра сцены несчастного случая, аварии, катастрофы, заболевания, смерти?'];
     
-    /*
-    * @private {Array} Массив ответов для каждого вопроса с указанием рейтинга для каждого ответа
+    /** @private {Array} Массив ответов для каждого вопроса с указанием рейтинга для каждого ответа
     */
     var answers = {
       0 : [['Нет', '0+'], ['Да, игра содержит эпизодические ненатуралистические изображение или описание половых отношений между мужчиной и женщиной, за исключением изображения или описания действий сексуального характера','12+'], ['Да, игра содержит информацию о сексе и (или) натуралистические сцены половых отношений, но без подробного изображения и описания действий сексуального характера','16+'], ['Да, игра содержит сцены или информацию порнографического характера (с подробным описанием) или сцены сексуального насилия','18+']],
@@ -39,35 +38,52 @@ var QuestionBank = (function () {
         
         /** @public Возвращает конкретный вопрос
         * @param {number} i - номер вопроса
-        * @return {Array}||{string} Вопрос или пустая строка
+        * @return {Array}|| undefined Вопрос или "нет значения"
         */
-        getQuestion: function (i = 0) {
-            if (i < questions.length) {
+        getQuestion: function (i) {
+            if (i === undefined) {
+                i = 0;
+            }
+            if (!isNaN(i) && (i < questions.length) && (i >= 0)) {
                 return questions[i];
             } else {
-                return '';
-            }            
+                return undefined;
+            }                        
         },
 		
-        /** @public Возвращает ответы с рейтингами на конкретный вопрос
+        /** @public Возвращает ответы на конкретный вопрос с их рейтингами 
         * @param {number} i - номер вопроса
         * @return {object} answers[i] - массив ответов и рейтингов на конкретный вопрос
         */
-		getAnswerAndRating: function (i = 0) {
-            return answers[i];
+		getAnswerAndRating: function (i) {
+            if (i === undefined) {
+                i = 0;
+            }
+            if (!isNaN(i) && (i < this.getAnswersLength()) && (i >= 0)) {
+                return answers[i];
+            } else {
+                return null;
+            }
         },
         
         /** @public Возвращает ТОЛЬКО ответы на конкретный вопрос
         * @param {number} a - номер вопроса
         * @return {Array} curansw - массив ответов на конкретный вопрос
         */
-        getOnlyAnswersForQ: function (a = 0) {
-            var curansw = [];
-            var allansw = answers[a];
-            for (var count = 0; count < allansw.length; count++) {
-                curansw.push(allansw[count][0]);
+        getOnlyAnswersForQ: function (a) {
+            if (a === undefined) {
+                a = 0;
             }
-            return curansw;
+            if (!isNaN(a) && (a < this.getAnswersLength()) && (a >= 0)) {
+                var curansw = [];
+                var allansw = answers[a];
+                for (var count = 0; count < allansw.length; count++) {
+                    curansw.push(allansw[count][0]);
+                }
+                return curansw;
+            } else {
+                return [];
+            }            
         },
 		
         /** @public Возвращает ТОЛЬКО рейтинг определенного ответа на конкретный вопрос
@@ -75,8 +91,18 @@ var QuestionBank = (function () {
         * @param {number} i - номер ответа
         * @return {string} answers[q][i][1] - рейтинг ответа
         */
-		getRatingOfAnswer: function (q = 0, i = 0) {
-            return answers[q][i][1];
+		getRatingOfAnswer: function (q, i) {
+            if (i === undefined) {
+                i = 0;
+            }
+            if (q === undefined) {
+                q = 0;
+            }
+            if (!isNaN(q) && !isNaN(i) && (q < this.getAnswersLength()) && (q >= 0) && (i >= 0) && (i < this.getOnlyAnswersForQ(q).length)) {
+                return answers[q][i][1];
+            } else {
+                return undefined;
+            }            
         },
 		
         /** @public Возвращает количество вопросов
@@ -100,48 +126,71 @@ var QuestionBank = (function () {
 })();
 
 /*
-* @object testing - объект, представляющий собой контроллер за процессом тестирования. 
+* @object testing - объект, представляющий собой контроллер, следящий за процессом тестирования. 
 */
 var testing = (function () {
     
-    /*
-    * @private {number} Количество пройденных вопросов
+    /** @private {number} Количество пройденных вопросов
     */
     var qnum = 0;
-     /*
-    * @private {number} Номер текущего вопрос
+	
+    /** @private {number} Номер текущего вопроса
     */
     var current = 0;
-     /*
-    * @private {string} Максимальный рейтинг игры на данный момент
+	
+    /** @private {string} Максимальный рейтинг игры на данный момент
     */
 	var maxRating = '0+';
-     /*
-    * @private {boolean} Показатель, запущен или нет процесс тестирования
+	
+    /** @private {boolean} Показатель, запущен или нет процесс тестирования
     */
 	var ongoing = false;
-    
+	    
     return {	
+		
+		/** @public {boolean} Определяет, является ли переданная строка рейтингом
+		*/
+		isRating: function (str) {
+			if ((str != undefined) && (str.length != 0) && (str.length <= 3) && (!isNaN(str[0]))) {
+				if (isNaN(str[1])) {
+					if ((str[1] == '+') && str.length == 2) {
+						return true;
+					}
+				}		
+				if (!isNaN(str[1]) && str.length == 3) {
+					if (str[2] == '+') {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}      
+		},
+				
         /** @public Возвращает следующий вопрос для теста
-        * @return {string} следующий вопрос для теста или пустая строка
+        * @return {string} следующий вопрос для теста или "нет значения"
         */
 		getNextQuestion: function () {
 			if (qnum < QuestionBank.getQuestionsLength()) {
                 current = qnum;
 				return (QuestionBank.getQuestion(qnum++));
 			} else {
-				return '';
+				return undefined;
 			}            
         },
         
         /** @public Возвращает все ответы и их рейтинг для текущего вопроса в тесте
-        * @return {object} Список ответов и их рейтинга для текущего вопроса в тесте или пустой список
+        * @return {object} Список ответов и их рейтинг для текущего вопроса в тесте или пустой список
         */
         getNQAnswers: function () {
             if (current < QuestionBank.getAnswersLength()) {                
 				return (QuestionBank.getAnswerAndRating(current));
 			} else {
-				return [];
+				return null;
 			} 
         },
 		
@@ -151,7 +200,7 @@ var testing = (function () {
 		nextQuestion: function () {
 			if (ongoing) {
 				var nextQ = this.getNextQuestion();
-				if (nextQ == '') {
+				if (nextQ == undefined) {
 					testing.endTesting();            	
 				} else {
 					testingFrame.setQuestionInFrame(nextQ);
@@ -166,26 +215,34 @@ var testing = (function () {
 		checkAnsw: function (currating) {
 			if (ongoing) {
 				maxRating = this.getMaxRating(maxRating, currating);
-				testingFrame.setRaiting(maxRating);
-				if (maxRating == '18+') {
-					this.endTesting();
+				if (maxRating != undefined) {
+					testingFrame.setRaiting(maxRating);
+					if (maxRating == '18+') {
+						this.endTesting();
+					} else {
+						this.nextQuestion();
+					}
 				} else {
-					this.nextQuestion();
-				}
+					this.endTesting();
+				}				
 			}
 		},
 		
-        /** @public Сравнивает два рейтинга игр
+        /** @public Сравнивает два рейтинга
         * @param {string} f - первый переданный рейтинг
         * @param {string} s - второй переданный рейтинг
-        * @return {object} найбильный рейтинг
+        * @return {string} наибольший рейтинг
         */
 		getMaxRating: function (f, s) {
-			if (parseInt(f.substring(0, f.length-1)) >= parseInt(s.substring(0, s.length-1))) {
-				return f;
+			if ((f != undefined) && (s != undefined) && (this.isRating(f)) && (this.isRating(s))) {
+					if (parseInt(f.substring(0, f.length-1)) >= parseInt(s.substring(0, s.length-1))) {
+					return f;
+				} else {
+					return s;
+				}
 			} else {
-				return s;
-			}
+				return undefined;
+			}			
 		},
 		
         /** @public Завершает процесс тестирования
@@ -218,10 +275,14 @@ var testingFrame = (function () {
     */
     function getObjectLength (obj) {
         var count = 0;
-            for (var smt in obj) {
+		if (obj != null) {
+			for (var smt in obj) {
                 count++;
             }
 			return count;
+		} else {
+			return 0;
+		}            
     }
     
     return {
@@ -262,6 +323,7 @@ var testingFrame = (function () {
         */
 		setBegin: function () {
 			document.getElementById('testBegin').style.display = 'none';
+			document.getElementById('result').innerHTML = '';
 			testing.nextQuestion();
 		},
         

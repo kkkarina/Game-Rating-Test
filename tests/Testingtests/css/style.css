@@ -1,6 +1,7 @@
 #wrapper {
     margin: 0 auto;
     width: 1100px;
+	display: none;
 }
 
 #questBlock {
@@ -18,9 +19,8 @@
 }
 
 #testBegin {
-	font-family: 'Impact';
-	font-weight: bolder;
-	font-size: 49px;
+	font-size: 50px;
+    font-family: fantasy;
 	border-radius: 5px;
 	cursor: pointer;
 	background-color: white;
@@ -66,8 +66,8 @@
     display: inline-block;
     margin-top: 10px;
     width: 660px;
-	font-family: 'Impact';
     font-size: 30px;
+    font-family: fantasy;
 	border-radius: 5px;
 	cursor: pointer;
 }
@@ -82,8 +82,8 @@
     width: 307px;
     height: 463px;
     text-align: center;
-	font-family: 'Impact';
     font-size: 20px;
+    font-family: fantasy;
 }
 
 #result {
@@ -91,9 +91,8 @@
     width: auto;
     height: auto;
     text-align: center;
-	font-family: 'Impact';
-	font-weight: bolder;
     font-size: 100px;
+    font-family: fantasy;
 }
 
 .yellow {
